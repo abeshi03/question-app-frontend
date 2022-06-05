@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import useSWR from "swr"
 
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
-import {Test} from "../../businessRules/Test";
+import { Test } from "../../businessRules/Test";
 /* --- assets -------------------------------------------------------------------------------------------------------- */
 import styles from "./testsListPage.module.scss";
 
