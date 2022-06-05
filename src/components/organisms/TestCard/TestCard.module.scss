@@ -1,0 +1,38 @@
+.testCard {
+
+  .image {
+    aspect-ratio: 16/9;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+
+    margin-top: 15px;
+  }
+
+  .numberOfQuestions {
+    margin-top: 10px;
+  }
+
+  .categoriesFlow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .categoryBadge {
+    background-color: gray;
+    border-radius: 10px;
+    padding: 5px;
+  }
+
+  .categoryName {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+  }
+}
