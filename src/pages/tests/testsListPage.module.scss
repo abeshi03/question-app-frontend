@@ -1,8 +1,11 @@
 .testsListPage {
 
+  max-width: 1080px;
+  margin: 0 auto;
+
   .testCardsFlow {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 30px;
 
     margin-top: 30px;

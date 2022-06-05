@@ -6,7 +6,7 @@ import { Test } from "../../../businessRules/Test";
 
 /* --- assets -------------------------------------------------------------------------------------------------------- */
 import styles from "./TestCard.module.scss";
-import noImage from "../../../../../public/noImage.png"
+import noImage from "../../../../public/noImage.png";
 
 type Props = {
   test: Test
