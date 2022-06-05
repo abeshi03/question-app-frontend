@@ -1,3 +1,6 @@
+/* --- lib ----------------------------------------------------------------------------------------------------------- */
+import axios from "axios";
+
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
 import { Test } from "../businessRules/Test";
 
@@ -7,7 +10,6 @@ import { Endpoint } from "./endpoints";
 
 /* --- type --------------------------------------------------------------------------------------------------------- */
 import { ApiResponse } from "./responses/ApiResponse";
-import axios from "axios";
 
 
 class TestApi implements TestApiImpl {
