@@ -3,7 +3,10 @@ import { TestQuestion } from "../../../businessRules/TestQuestion";
 export type TestTakeResponse = {
   id: number;
   name: string,
-  timeLimit: number;
+  timeLimit: {
+    minutes: number;
+    seconds: number;
+  };
   numberOfQuestions: number;
   testPassingScore: number;
   questions: Omit<TestQuestion, "answer">[];
