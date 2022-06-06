@@ -1,0 +1,93 @@
+// - ボタン色 ============================================================================================================
+.button__skyBlue {
+
+  background: #F4A43B;
+  color: #FFFFFF;
+
+  border: none;
+
+
+  &:hover {
+
+    background: #FFFFFF;
+    color: #F4A43B;
+
+    border: 2px solid #F4A43B;
+
+    box-shadow: 0 3px 6px rgba(black, 0.25);
+  }
+
+
+  &:focus {
+
+    background: #F4A43B;
+    color: #FFFFFF;
+  }
+
+
+  &:active {
+
+    background: #FFFFFF;
+    color: #F4A43B;
+
+    border: 2px solid #F4A43B;
+  }
+}
+
+
+.button__white {
+
+  background: #FFFFFF;
+  color: #F4A43B;
+
+  border: 2px solid #F4A43B;
+
+
+  &:hover {
+
+    background: #F4A43B;
+    color: #FFFFFF;
+
+    border: 2px solid #F4A43B;
+
+    box-shadow: 0 3px 6px rgba(black, 0.25);
+  }
+
+
+  &:focus {
+
+    background: #FFFFFF;
+    color: #F4A43B;
+  }
+
+
+  &:active {
+
+    background: #F4A43B;
+    color: #FFFFFF;
+  }
+}
+
+// - 大きさ =============================================================================================================
+.big {
+
+  width: 168px;
+  height: 50px;
+}
+
+.small {
+
+  width: 109px;
+  height: 45px;
+}
+
+
+.button {
+
+  border-radius: 5px;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
