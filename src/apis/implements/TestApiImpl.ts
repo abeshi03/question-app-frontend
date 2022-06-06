@@ -6,5 +6,10 @@ import { TestTakeResponse } from "../responses/tests/TestTakeResponse";
 
 export interface TestApiImpl {
   findList: () => Promise<Test[]>;
-  testTake: (testId: number) => Promise<TestTakeResponse>;
+
+  /**
+   * 本来はtestIdを引数に取る
+   * @param testId
+   */
+  testTake: (endpoint: string) => Promise<TestTakeResponse>;
 }

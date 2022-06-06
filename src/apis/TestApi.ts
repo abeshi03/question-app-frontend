@@ -19,8 +19,12 @@ class TestApi implements TestApiImpl {
     return response.data.data;
   }
 
-  public async testTake(testId: number): Promise<TestTakeResponse> {
-    const response: ApiResponse<TestTakeResponse> = await axios.get(Endpoint.Test.take(testId));
+  /**
+   * 本来はtestIdを引数に取る
+   * @param testId
+   */
+  public async testTake(endpoint: string): Promise<TestTakeResponse> {
+    const response: ApiResponse<TestTakeResponse> = await axios.get(endpoint);
     return response.data.data;
   }
 }

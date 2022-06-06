@@ -17,5 +17,5 @@ export type TestQuestion = {
   type: QuestionType;
   text: string;
   answer?: number;
-  options: TestQuestionOption[];
+  options?: TestQuestionOption[]; // 数字回答の場合はオプションがない
 }
