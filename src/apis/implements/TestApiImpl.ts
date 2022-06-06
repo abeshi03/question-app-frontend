@@ -6,5 +6,5 @@ import { TestTakeResponse } from "../responses/tests/TestTakeResponse";
 
 export interface TestApiImpl {
   findList: () => Promise<Test[]>;
-  testTake: () => Promise<TestTakeResponse>;
+  testTake: (testId: number) => Promise<TestTakeResponse>;
 }
