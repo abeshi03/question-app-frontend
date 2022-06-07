@@ -2,6 +2,10 @@
 import React, { useCallback, useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
+
+/* --- businessRule -------------------------------------------------------------------------------------------------- */
+import { questionType } from "../../../businessRules/TestQuestion";
 
 /* --- asset --------------------------------------------------------------------------------------------------------- */
 import styles from "./testTakingPage.module.scss";
@@ -16,9 +20,11 @@ import { TestTakeResponse } from "../../../apis/responses/tests/TestTakeResponse
 /* --- component ----------------------------------------------------------------------------------------------------- */
 import { Button } from "../../../components/atoms/Button/Button";
 import { CountDownTimer } from "./CountDownTimer";
+import { InputField } from "../../../components/molecules/controlls/InputField/InputField";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
-import { TestStep, testStep } from "./pageSettings"
+import { TestInputValues, TestStep, testStep } from "./pageSettings"
+
 
 const TestTakingPage: React.FC = () => {
 
@@ -45,13 +51,24 @@ const TestTakingPage: React.FC = () => {
     return `${timeLimit.minutes}分${timeLimit.seconds}秒`;
   }
 
+  /* --- フォーム ----------------------------------------------------------------------------------------------------- */
+  // const { register, handleSubmit, control, formState: { errors } } = useForm<TestInputValues>();
+  // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+  //   control,
+  //   name: "answers",
+  // });
+  // const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
+  //   console.log(inputValue.answers);
+  // }
+
   return (
     <div className={styles.testTakingPage}>
       {isLoading && <p>ローディング</p>}
       {error && <p>エラー</p>}
       {test &&
         <>
-          {activeStep === testStep.guidance &&
+          {/*スタート画面 --------------------------------------------------------------------------- */}
+          {activeStep == testStep.guidance &&
             <div className={styles.guidanceStep}>
               <h2 className={styles.testName}>{test.name}</h2>
               <p className={styles.numberOfQuestions}>問題数: {test.numberOfQuestions}</p>
@@ -70,9 +87,42 @@ const TestTakingPage: React.FC = () => {
             </div>
           }
 
+          {/* 問題画面 --------------------------------------------------------------------------- */}
           {activeStep === testStep.questions &&
             <div className={styles.questionsStep}>
               <CountDownTimer timeLimit={test.timeLimit}/>
+              {/*<form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>*/}
+              {/*  {test.questions.map((question, index) => (*/}
+              {/*    <div className={styles.questionBox} key={question.id}>*/}
+
+              {/*      <div>*/}
+              {/*        <span className={styles.questionNumber}>Q{index + 1}</span>*/}
+              {/*      </div>*/}
+
+              {/*      <div>*/}
+              {/*        <span className={styles.questionText}>{question.text}</span>*/}
+              {/*          {fields.map((field, fieldIndex) => (*/}
+              {/*            <>*/}
+              {/*              {question.type === questionType.numberInputting &&*/}
+              {/*                <InputField*/}
+              {/*                  key={field.id}*/}
+              {/*                  className={styles.inputField}*/}
+              {/*                  type="number"*/}
+              {/*                  required={false}*/}
+              {/*                  guidance="数字で回答してください"*/}
+              {/*                  inputProps={register(`answers.${fieldIndex}.numberAnswer` as const, {*/}
+              {/*                    required: false*/}
+              {/*                  })}*/}
+              {/*                />*/}
+              {/*              }*/}
+              {/*            </>*/}
+              {/*          ))}*/}
+              {/*      </div>*/}
+
+              {/*    </div>*/}
+              {/*  ))}*/}
+              {/*  <button type="submit">送信</button>*/}
+              {/*</form>*/}
             </div>
           }
         </>
@@ -82,4 +132,5 @@ const TestTakingPage: React.FC = () => {
 }
 
 export default TestTakingPage;
+
 

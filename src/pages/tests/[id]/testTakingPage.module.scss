@@ -58,4 +58,39 @@
       font-weight: bold;
     }
   }
+
+  .questionsForm {
+    display: grid;
+    row-gap: 40px;
+
+    margin-top: 40px;
+  }
+
+  .questionBox {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    column-gap: 40px;
+
+    width: 100%;
+    padding: 20px 5%;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(black, 0.06)
+  }
+
+  .questionNumber {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0E357E;
+  }
+
+  .questionText {
+    display: inline-block;
+    font-weight: bold;
+    color: #0E357E;
+    margin-top: 3px;
+  }
+
+  .inputField {
+    margin-top: 20px;
+  }
 }

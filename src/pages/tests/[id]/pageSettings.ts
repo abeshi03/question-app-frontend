@@ -6,3 +6,13 @@ export const testStep = {
 } as const;
 
 export type TestStep = typeof testStep[keyof typeof testStep];
+
+/* --- inputState ---------------------------------------------------------------------------------------------------- */
+// export type Answer = {
+//   numberAnswer?: number;
+//   optionAnswerId?: number;
+//   optionAnswerIds?: number[];
+// }
+// export type TestInputValues = {
+//   answers: Answer[];
+// }
