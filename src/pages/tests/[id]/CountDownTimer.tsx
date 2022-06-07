@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, memo, useEffect, useState } from "react";
 import styles from "./testTakingPage.module.scss";
 
 type Props = {
@@ -8,19 +8,20 @@ type Props = {
   };
 }
 
-export const CountDownTimer: FC<Props> = (props) => {
+export const CountDownTimer: FC<Props> = memo((props) => {
   const { timeLimit } = props;
   const [seconds, setSeconds] = useState(timeLimit.seconds);
   const [minutes, setMinutes] = useState(timeLimit.minutes);
 
   useEffect(() => {
-    let sampleInterval = setInterval(() => {
+    const sampleInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
       }
       if (seconds === 0) {
         if (minutes === 0) {
           clearInterval(sampleInterval);
+          alert("終了！")
         } else {
           setMinutes(minutes - 1);
           setSeconds(59);
@@ -38,4 +39,4 @@ export const CountDownTimer: FC<Props> = (props) => {
       <span className={styles.accentColor}>{minutes}分{seconds}秒</span>
     </div>
   )
-}
+})
