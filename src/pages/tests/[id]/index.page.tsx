@@ -12,7 +12,6 @@ import styles from "./testTakingPage.module.scss";
 
 /* --- api ---------------------------------------------------------------------------------------------------------- */
 import { testApi } from "../../../apis/TestApi";
-import { Endpoint } from "../../../apis/endpoints";
 
 /* --- response ------------------------------------------------------------------------------------------------------ */
 import { TestTakeResponse } from "../../../apis/responses/tests/TestTakeResponse";
@@ -36,9 +35,8 @@ const TestTakingPage: React.FC = () => {
   },[])
 
   /* --- テストデータ取得 ---------------------------------------------------------------------------------------------- */
-  const testId = parseInt(router.query.id as string, 10);
-  const url = testId ? Endpoint.Test.take(testId) : null;
-  const { data: test, error } = useSWR<TestTakeResponse>(url, testApi.testTake);
+  const testId = router.query.id ? String(router.query.id) : null;
+  const { data: test, error } = useSWR<TestTakeResponse>(testId, testApi.testTake);
   const isLoading = !test && !error;
 
   /* --- タイマー ----------------------------------------------------------------------------------------------------- */
@@ -52,10 +50,10 @@ const TestTakingPage: React.FC = () => {
   }
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
-  // const { register, handleSubmit, control, formState: { errors } } = useForm<TestInputValues>();
-  // const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
-  //   console.log(inputValue.answers);
-  // }
+  const { register, handleSubmit, control, formState: { errors } } = useForm<TestInputValues>();
+  const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
+    console.log(inputValue.answers);
+  }
 
   return (
     <div className={styles.testTakingPage}>
@@ -84,38 +82,38 @@ const TestTakingPage: React.FC = () => {
           }
 
           {/* 問題画面 --------------------------------------------------------------------------- */}
-          {/*{activeStep === testStep.questions &&*/}
-          {/*  <div className={styles.questionsStep}>*/}
-          {/*    <CountDownTimer timeLimit={test.timeLimit}/>*/}
-          {/*    <form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>*/}
-          {/*      {test.questions.map((question, index) => (*/}
-          {/*        <div className={styles.questionBox} key={question.id}>*/}
+          {activeStep === testStep.questions &&
+            <div className={styles.questionsStep}>
+              <CountDownTimer timeLimit={test.timeLimit}/>
+              <form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>
+                {test.questions.map((question, index) => (
+                  <div className={styles.questionBox} key={question.id}>
 
-          {/*          <div>*/}
-          {/*            <span className={styles.questionNumber}>Q{index + 1}</span>*/}
-          {/*          </div>*/}
+                    <div>
+                      <span className={styles.questionNumber}>Q{index + 1}</span>
+                    </div>
 
-          {/*          <div>*/}
-          {/*            <span className={styles.questionText}>{question.text}</span>*/}
-          {/*              {question.type === questionType.numberInputting &&*/}
-          {/*                <InputField*/}
-          {/*                  className={styles.inputField}*/}
-          {/*                  type="number"*/}
-          {/*                  required={false}*/}
-          {/*                  guidance="数字で回答してください"*/}
-          {/*                  inputProps={register(`answers.${index}.numberAnswer`, {*/}
-          {/*                    required: false*/}
-          {/*                  })}*/}
-          {/*                />*/}
-          {/*              }*/}
-          {/*          </div>*/}
+                    <div>
+                      <span className={styles.questionText}>{question.text}</span>
+                        {question.type === questionType.numberInputting &&
+                          <InputField
+                            className={styles.inputField}
+                            type="number"
+                            required={false}
+                            guidance="数字で回答してください"
+                            inputProps={register(`answers.${index}.numberAnswer`, {
+                              required: false
+                            })}
+                          />
+                        }
+                    </div>
 
-          {/*        </div>*/}
-          {/*      ))}*/}
-          {/*      <button type="submit">送信</button>*/}
-          {/*    </form>*/}
-          {/*  </div>*/}
-          {/*}*/}
+                  </div>
+                ))}
+                <button type="submit">送信</button>
+              </form>
+            </div>
+          }
         </>
       }
     </div>
