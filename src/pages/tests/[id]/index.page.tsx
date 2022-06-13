@@ -132,7 +132,7 @@ const TestTakingPage: React.FC = () => {
                               label={option.text}
                               value={option.id}
                               inputProps={register(`answers.${index}.optionAnswerId`, {
-                                required: true
+                                required: testTakeValidations.singleOption.required
                               })}
                             />
                           ))}
@@ -141,6 +141,25 @@ const TestTakingPage: React.FC = () => {
                             errors.answers[index] &&
                             singleOptionErrorMessage(errors.answers[index].optionAnswerId)
                           }
+                        </div>
+                      }
+
+                      {/* 複数回答 --------------------------------------------------------------------*/}
+                      {question.type === questionType.singleOrMultipleOptions &&
+                        <div className={styles.checkboxesGroup}>
+                          {question.options?.map((option) => (
+                            <React.Fragment key={option.id}>
+                              <label htmlFor={`${option.id}`}>{option.text}</label>
+                              <input
+                                {...register(`answers.${index}.optionAnswerIds`, {
+                                  required: true
+                                })}
+                                type="checkbox"
+                                value={option.id}
+                                id={`${option.id}`}
+                              />
+                            </React.Fragment>
+                          ))}
                         </div>
                       }
                     </div>
