@@ -20,6 +20,7 @@ import { TestTakeResponse } from "../../../apis/responses/tests/TestTakeResponse
 import { Button } from "../../../components/atoms/Button/Button";
 import { CountDownTimer } from "./CountDownTimer";
 import { InputField } from "../../../components/molecules/controlls/InputField/InputField";
+import { RadioButton } from "../../../components/molecules/controlls/RadioButton/RadioButton";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
 import { TestInputValues, TestStep, testStep } from "./pageSettings"
@@ -97,6 +98,7 @@ const TestTakingPage: React.FC = () => {
                     </div>
 
                     <div>
+                      {/*数字回答* ----------------------------------------------------------------- */}
                       <span className={styles.questionText}>{question.text}</span>
                         {question.type === questionType.numberInputting &&
                           <>
@@ -116,6 +118,22 @@ const TestTakingPage: React.FC = () => {
                             }
                           </>
                         }
+                      {/* 単数回答 * ----------------------------------------------------------------- */}
+                      {question.type === questionType.singleOption &&
+                        <div className={styles.radioButtonGroup}>
+                          {question.options?.map((option) => (
+                            <RadioButton
+                              key={option.id}
+                              id={option.id}
+                              label={option.text}
+                              value={option.id}
+                              inputProps={register(`answers.${index}.optionAnswerId`, {
+                                required: true
+                              })}
+                            />
+                          ))}
+                        </div>
+                      }
                     </div>
                   </div>
                 ))}
@@ -130,6 +148,7 @@ const TestTakingPage: React.FC = () => {
 }
 
 export default TestTakingPage;
+
 
 
 
