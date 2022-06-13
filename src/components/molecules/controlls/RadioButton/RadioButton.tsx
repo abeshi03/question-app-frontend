@@ -28,16 +28,6 @@ export const RadioButton: FC<RadioButton> = memo((props) => {
           <span className={styles.inside}></span>
         </span>{label}
       </label>
-      {/*<label htmlFor={`${id}`} className={styles.radioButton}>*/}
-      {/*  <input*/}
-      {/*    { ...inputProps }*/}
-      {/*    id={`${id}`}*/}
-      {/*    className={`${className} ${styles.radioButton}`}*/}
-      {/*    type="radio"*/}
-      {/*    value={value}*/}
-      {/*  />*/}
-      {/*  <span>{label}</span>*/}
-      {/*</label>*/}
     </>
   );
 });
