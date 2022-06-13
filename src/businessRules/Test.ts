@@ -6,6 +6,9 @@ export type Test = {
   thumbnailUri?: string;
   numberOfQuestions: number;
   testPassingScore: number;
-  timeLimit: number;
+  timeLimit: {
+    minutes: number;
+    seconds: number;
+  };
   categories: Category[]
 }
