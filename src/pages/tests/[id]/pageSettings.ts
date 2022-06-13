@@ -9,6 +9,7 @@ export type TestStep = typeof testStep[keyof typeof testStep];
 
 /* --- inputState ---------------------------------------------------------------------------------------------------- */
 export type Answer = {
+  id: number;
   numberAnswer?: number;
   optionAnswerId?: number;
   optionAnswerIds?: number[];

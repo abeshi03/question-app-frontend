@@ -24,6 +24,9 @@ import { InputField } from "../../../components/molecules/controlls/InputField/I
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
 import { TestInputValues, TestStep, testStep } from "./pageSettings"
 
+/* --- validations --------------------------------------------------------------------------------------------------- */
+import { numberInputtingErrorMessages, testTakeValidations } from "../../../validations/testTakeValidations";
+
 
 const TestTakingPage: React.FC = () => {
 
@@ -96,18 +99,24 @@ const TestTakingPage: React.FC = () => {
                     <div>
                       <span className={styles.questionText}>{question.text}</span>
                         {question.type === questionType.numberInputting &&
-                          <InputField
-                            className={styles.inputField}
-                            type="number"
-                            required={false}
-                            guidance="数字で回答してください"
-                            inputProps={register(`answers.${index}.numberAnswer`, {
-                              required: false
-                            })}
-                          />
+                          <>
+                            <InputField
+                              className={styles.inputField}
+                              type="number"
+                              required={false}
+                              guidance="数字で回答してください"
+                              inputProps={register(`answers.${index}.numberAnswer`, {
+                                required: testTakeValidations.numberInputting.required
+                              })}
+                            />
+                            {
+                              errors.answers &&
+                              errors.answers[index] &&
+                              numberInputtingErrorMessages(errors.answers[index].numberAnswer)
+                            }
+                          </>
                         }
                     </div>
-
                   </div>
                 ))}
                 <button type="submit">送信</button>
@@ -121,5 +130,6 @@ const TestTakingPage: React.FC = () => {
 }
 
 export default TestTakingPage;
+
 
 
