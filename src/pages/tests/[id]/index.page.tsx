@@ -26,7 +26,11 @@ import { RadioButton } from "../../../components/molecules/controlls/RadioButton
 import { TestInputValues, TestStep, testStep } from "./pageSettings"
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
-import { numberInputtingErrorMessages, testTakeValidations } from "../../../validations/testTakeValidations";
+import {
+  numberInputtingErrorMessages,
+  testTakeValidations,
+  singleOptionErrorMessage
+} from "../../../validations/testTakeValidations";
 
 
 const TestTakingPage: React.FC = () => {
@@ -54,7 +58,7 @@ const TestTakingPage: React.FC = () => {
   }
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
-  const { register, handleSubmit, control, formState: { errors } } = useForm<TestInputValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<TestInputValues>();
   const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
     console.log(inputValue.answers);
   }
@@ -132,6 +136,11 @@ const TestTakingPage: React.FC = () => {
                               })}
                             />
                           ))}
+                          {
+                            errors.answers &&
+                            errors.answers[index] &&
+                            singleOptionErrorMessage(errors.answers[index].optionAnswerId)
+                          }
                         </div>
                       }
                     </div>

@@ -19,9 +19,18 @@ export const testTakeValidations = {
 /* --- error message ------------------------------------------------------------------------------------------------- */
 export const numberInputtingErrorMessages = (error?: FieldError) => {
   if (!error) return;
-  switch (error.type) {
 
+  switch (error.type) {
     case "required":
       return <ErrorMessage message="こちらの回答は必須です" />
   }
 };
+
+export const singleOptionErrorMessage = (error?: FieldError) => {
+  if (!error) return;
+
+  switch (error.type) {
+    case "required":
+      return <ErrorMessage message="回答を選択してください" />
+  }
+}
