@@ -12,8 +12,10 @@ export const testTakeValidations = {
   numberInputting: {
     required: true
   },
-
   singleOption: {
+    required: true
+  },
+  singleOrMultipleOptions: {
     required: true
   }
 };

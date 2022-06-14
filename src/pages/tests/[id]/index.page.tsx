@@ -1,5 +1,6 @@
 /* --- lib ---------------------------------------------------------------------------------------------------------- */
 import React, { useCallback, useState } from "react";
+import type { NextPage } from "next";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ import { Button } from "../../../components/atoms/Button/Button";
 import { CountDownTimer } from "./CountDownTimer";
 import { InputField } from "../../../components/molecules/controlls/InputField/InputField";
 import { RadioButton } from "../../../components/molecules/controlls/RadioButton/RadioButton";
+import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
 import { TestInputValues, TestStep, testStep } from "./pageSettings"
@@ -33,7 +35,7 @@ import {
 } from "../../../validations/testTakeValidations";
 
 
-const TestTakingPage: React.FC = () => {
+const TestTakingPage: NextPage = () => {
 
   const router = useRouter();
   const [activeStep, setActiveStep] = useState<TestStep>(testStep.guidance);
@@ -148,17 +150,16 @@ const TestTakingPage: React.FC = () => {
                       {question.type === questionType.singleOrMultipleOptions &&
                         <div className={styles.checkboxesGroup}>
                           {question.options?.map((option) => (
-                            <React.Fragment key={option.id}>
-                              <label htmlFor={`${option.id}`}>{option.text}</label>
-                              <input
-                                {...register(`answers.${index}.optionAnswerIds`, {
-                                  required: true
-                                })}
-                                type="checkbox"
-                                value={option.id}
-                                id={`${option.id}`}
-                              />
-                            </React.Fragment>
+                            <Checkbox
+                              key={option.id}
+                              id={option.id}
+                              label={option.text}
+                              required={false}
+                              value={option.id}
+                              inputProps={register(`answers.${index}.optionAnswerIds`, {
+                                required: testTakeValidations.singleOrMultipleOptions.required
+                              })}
+                            />
                           ))}
                         </div>
                       }
