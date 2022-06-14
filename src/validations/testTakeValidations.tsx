@@ -39,3 +39,12 @@ export const singleOptionErrorMessage = (error?: FieldError) => {
       return <ErrorMessage message="回答を選択してください" />
   }
 }
+
+export const singleOrMultipleOptionsErrorMessage = (error?: FieldError) => {
+  if (!error) return;
+
+  switch (error.type) {
+    case "required":
+      return <ErrorMessage message="回答を選択してください" />
+  }
+}

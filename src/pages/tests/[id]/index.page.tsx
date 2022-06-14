@@ -31,7 +31,7 @@ import { TestInputValues, TestStep, testStep } from "./pageSettings"
 import {
   numberInputtingErrorMessages,
   testTakeValidations,
-  singleOptionErrorMessage
+  singleOptionErrorMessage, singleOrMultipleOptionsErrorMessage
 } from "../../../validations/testTakeValidations";
 
 
@@ -161,6 +161,11 @@ const TestTakingPage: NextPage = () => {
                               })}
                             />
                           ))}
+                          {
+                            errors.answers &&
+                            errors.answers[index] &&
+                            singleOptionErrorMessage(errors.answers[index].optionAnswerIds)
+                          }
                         </div>
                       }
                     </div>
