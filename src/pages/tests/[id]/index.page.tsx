@@ -164,7 +164,7 @@ const TestTakingPage: NextPage = () => {
                           {
                             errors.answers &&
                             errors.answers[index] &&
-                            singleOptionErrorMessage(errors.answers[index].optionAnswerIds)
+                            singleOrMultipleOptionsErrorMessage(errors.answers[index].optionAnswerIds)
                           }
                         </div>
                       }
