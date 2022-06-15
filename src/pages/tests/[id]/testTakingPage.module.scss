@@ -93,4 +93,12 @@
   .inputField {
     margin-top: 20px;
   }
+
+  .checkboxesGroup {
+    display: grid;
+    row-gap: 30px;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }

@@ -1,0 +1,85 @@
+@keyframes radio-select {
+  0% {
+    transform: scale(0,0);
+  }
+  65% {
+    transform: scale(1.1,1.1);
+  }
+  100% {
+    transform: scale(1,1);
+  }
+}
+
+/* styles */
+
+$almost-white: #F3F3F3;
+$blue: #0E357E;
+$border: #CCCCCC;
+$size: 30px;
+
+@mixin centerer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding-left: 40px;
+}
+
+.radioButton {
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+}
+
+.outside {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -($size / 2);
+  width: $size;
+  height: $size;
+  border: 2px solid $border;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: $almost-white;
+}
+
+.inside {
+  @include centerer;
+  display: inline-block;
+  border-radius: 50%;
+  width: ($size - 10px);
+  height: ($size - 10px);
+  background: $blue;
+  left: 3px;
+  top: 3px;
+  transform: scale(0,0);
+  .no-transforms & {
+    left: auto;
+    top: auto;
+    width: 0;
+    height: 0;
+  }
+}
+
+.radioButton {
+  &:checked {
+    + .outside .inside {
+      animation: radio-select 0.1s linear;
+      transform: scale(1,1);
+      .no-transforms & {
+        width: ($size - 10px);
+        height: ($size - 10px);
+      }
+    }
+  }
+}

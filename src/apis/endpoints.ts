@@ -5,7 +5,7 @@ export namespace Endpoint {
 
     export const findList = `${BASE_URL}/tests`;
 
-    export function take(testId: number) {
+    export function take(testId: string) {
       return `${BASE_URL}/tests/${testId}/take`;
     }
   }

@@ -8,11 +8,12 @@ export const testStep = {
 export type TestStep = typeof testStep[keyof typeof testStep];
 
 /* --- inputState ---------------------------------------------------------------------------------------------------- */
-// export type Answer = {
-//   numberAnswer?: number;
-//   optionAnswerId?: number;
-//   optionAnswerIds?: number[];
-// }
-// export type TestInputValues = {
-//   answers: Answer[];
-// }
+export type Answer = {
+  id: number;
+  numberAnswer?: number;
+  optionAnswerId?: number;
+  optionAnswerIds?: number[];
+}
+export type TestInputValues = {
+  answers: Answer[];
+}

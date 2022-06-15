@@ -1,5 +1,6 @@
 /* --- lib ---------------------------------------------------------------------------------------------------------- */
 import React, { useCallback, useState } from "react";
+import type { NextPage } from "next";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,7 +13,6 @@ import styles from "./testTakingPage.module.scss";
 
 /* --- api ---------------------------------------------------------------------------------------------------------- */
 import { testApi } from "../../../apis/TestApi";
-import { Endpoint } from "../../../apis/endpoints";
 
 /* --- response ------------------------------------------------------------------------------------------------------ */
 import { TestTakeResponse } from "../../../apis/responses/tests/TestTakeResponse";
@@ -21,12 +21,21 @@ import { TestTakeResponse } from "../../../apis/responses/tests/TestTakeResponse
 import { Button } from "../../../components/atoms/Button/Button";
 import { CountDownTimer } from "./CountDownTimer";
 import { InputField } from "../../../components/molecules/controlls/InputField/InputField";
+import { RadioButton } from "../../../components/molecules/controlls/RadioButton/RadioButton";
+import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
 import { TestInputValues, TestStep, testStep } from "./pageSettings"
 
+/* --- validations --------------------------------------------------------------------------------------------------- */
+import {
+  numberInputtingErrorMessages,
+  testTakeValidations,
+  singleOptionErrorMessage, singleOrMultipleOptionsErrorMessage
+} from "../../../validations/testTakeValidations";
 
-const TestTakingPage: React.FC = () => {
+
+const TestTakingPage: NextPage = () => {
 
   const router = useRouter();
   const [activeStep, setActiveStep] = useState<TestStep>(testStep.guidance);
@@ -36,9 +45,8 @@ const TestTakingPage: React.FC = () => {
   },[])
 
   /* --- テストデータ取得 ---------------------------------------------------------------------------------------------- */
-  const testId = parseInt(router.query.id as string, 10);
-  const url = testId ? Endpoint.Test.take(testId) : null;
-  const { data: test, error } = useSWR<TestTakeResponse>(url, testApi.testTake);
+  const testId = router.query.id ? String(router.query.id) : null;
+  const { data: test, error } = useSWR<TestTakeResponse>(testId, testApi.testTake);
   const isLoading = !test && !error;
 
   /* --- タイマー ----------------------------------------------------------------------------------------------------- */
@@ -52,10 +60,10 @@ const TestTakingPage: React.FC = () => {
   }
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
-  // const { register, handleSubmit, control, formState: { errors } } = useForm<TestInputValues>();
-  // const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
-  //   console.log(inputValue.answers);
-  // }
+  const { register, handleSubmit, formState: { errors } } = useForm<TestInputValues>();
+  const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
+    console.log(inputValue.answers);
+  }
 
   return (
     <div className={styles.testTakingPage}>
@@ -84,38 +92,89 @@ const TestTakingPage: React.FC = () => {
           }
 
           {/* 問題画面 --------------------------------------------------------------------------- */}
-          {/*{activeStep === testStep.questions &&*/}
-          {/*  <div className={styles.questionsStep}>*/}
-          {/*    <CountDownTimer timeLimit={test.timeLimit}/>*/}
-          {/*    <form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>*/}
-          {/*      {test.questions.map((question, index) => (*/}
-          {/*        <div className={styles.questionBox} key={question.id}>*/}
+          {activeStep === testStep.questions &&
+            <div className={styles.questionsStep}>
+              <CountDownTimer timeLimit={test.timeLimit}/>
+              <form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>
+                {test.questions.map((question, index) => (
+                  <div className={styles.questionBox} key={question.id}>
 
-          {/*          <div>*/}
-          {/*            <span className={styles.questionNumber}>Q{index + 1}</span>*/}
-          {/*          </div>*/}
+                    <div>
+                      <span className={styles.questionNumber}>Q{index + 1}</span>
+                    </div>
 
-          {/*          <div>*/}
-          {/*            <span className={styles.questionText}>{question.text}</span>*/}
-          {/*              {question.type === questionType.numberInputting &&*/}
-          {/*                <InputField*/}
-          {/*                  className={styles.inputField}*/}
-          {/*                  type="number"*/}
-          {/*                  required={false}*/}
-          {/*                  guidance="数字で回答してください"*/}
-          {/*                  inputProps={register(`answers.${index}.numberAnswer`, {*/}
-          {/*                    required: false*/}
-          {/*                  })}*/}
-          {/*                />*/}
-          {/*              }*/}
-          {/*          </div>*/}
+                    <div>
+                      {/*数字回答* ----------------------------------------------------------------- */}
+                      <span className={styles.questionText}>{question.text}</span>
+                        {question.type === questionType.numberInputting &&
+                          <>
+                            <InputField
+                              className={styles.inputField}
+                              type="number"
+                              required={false}
+                              guidance="数字で回答してください"
+                              inputProps={register(`answers.${index}.numberAnswer`, {
+                                required: testTakeValidations.numberInputting.required
+                              })}
+                            />
+                            {
+                              errors.answers &&
+                              errors.answers[index] &&
+                              numberInputtingErrorMessages(errors.answers[index].numberAnswer)
+                            }
+                          </>
+                        }
+                      {/* 単数回答 * ----------------------------------------------------------------- */}
+                      {question.type === questionType.singleOption &&
+                        <div className={styles.radioButtonGroup}>
+                          {question.options?.map((option) => (
+                            <RadioButton
+                              key={option.id}
+                              id={option.id}
+                              label={option.text}
+                              value={option.id}
+                              inputProps={register(`answers.${index}.optionAnswerId`, {
+                                required: testTakeValidations.singleOption.required
+                              })}
+                            />
+                          ))}
+                          {
+                            errors.answers &&
+                            errors.answers[index] &&
+                            singleOptionErrorMessage(errors.answers[index].optionAnswerId)
+                          }
+                        </div>
+                      }
 
-          {/*        </div>*/}
-          {/*      ))}*/}
-          {/*      <button type="submit">送信</button>*/}
-          {/*    </form>*/}
-          {/*  </div>*/}
-          {/*}*/}
+                      {/* 複数回答 --------------------------------------------------------------------*/}
+                      {question.type === questionType.singleOrMultipleOptions &&
+                        <div className={styles.checkboxesGroup}>
+                          {question.options?.map((option) => (
+                            <Checkbox
+                              key={option.id}
+                              id={option.id}
+                              label={option.text}
+                              required={false}
+                              value={option.id}
+                              inputProps={register(`answers.${index}.optionAnswerIds`, {
+                                required: testTakeValidations.singleOrMultipleOptions.required
+                              })}
+                            />
+                          ))}
+                          {
+                            errors.answers &&
+                            errors.answers[index] &&
+                            singleOrMultipleOptionsErrorMessage(errors.answers[index].optionAnswerIds)
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                ))}
+                <button type="submit">送信</button>
+              </form>
+            </div>
+          }
         </>
       }
     </div>
@@ -123,5 +182,7 @@ const TestTakingPage: React.FC = () => {
 }
 
 export default TestTakingPage;
+
+
 
 
