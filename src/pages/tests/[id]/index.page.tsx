@@ -40,11 +40,6 @@ const TestTakingPage: NextPage = () => {
 
   const router = useRouter();
 
-  /* --- テストデータ取得 ---------------------------------------------------------------------------------------------- */
-  const testId = router.query.id ? String(router.query.id) : null;
-  const { data: test, error } = useSWR<TestTakeResponse>(testId, testApi.testTake);
-  const isLoading = !test && !error;
-
   /* --- タイマー ----------------------------------------------------------------------------------------------------- */
   const formattedTimeLimit = (timeLimit: { minutes: number; seconds: number; }) => {
     if (timeLimit.seconds === 0 && timeLimit.minutes === 0) {
@@ -57,14 +52,30 @@ const TestTakingPage: NextPage = () => {
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
   const { register, handleSubmit, formState: { errors }, getValues } = useForm<TestInputValues>();
-  const [activeStep, setActiveStep] = useState<TestStep>(testStep.guidance);
+  const [ activeStep, setActiveStep ] = useState<TestStep>(testStep.guidance);
+
+
+  /*　-- スタート画面  ------------------------------------------------------------------------------------------------- */
+  const testId = router.query.id ? String(router.query.id) : null;
+  const { data: test, error } = useSWR<TestTakeResponse>(testId, testApi.testTake);
+  const isLoading = !test && !error;
 
   const goToQuestionStep = useCallback(() => {
     setActiveStep(testStep.questions);
   },[])
 
+  /*　-- 問題画面  ---------------------------------------------------------------------------------------------------- */
   const goToSelfCheckStep = () => {
     setActiveStep(testStep.selfCheck);
+  }
+
+  /*　-- 確認画面  ---------------------------------------------------------------------------------------------------- */
+  const getAnswerOptionText = (answerOptionId: number, options?: TestQuestionOption[]) => {
+    if (!options) return undefined;
+
+    return options.find((option) => {
+      return option.id === Number(answerOptionId)
+    })?.text
   }
 
   const returnToQuestionStep = useCallback(() => {
@@ -73,15 +84,6 @@ const TestTakingPage: NextPage = () => {
 
   const submitTestData = () => {
     console.log(getValues())
-  }
-
-  const getAnswerOptionText = (answerOptionId: number, options?: TestQuestionOption[]) => {
-
-    if (!options) return undefined;
-
-    return options.find((option) => {
-      return option.id === Number(answerOptionId)
-    })?.text
   }
 
   return (
