@@ -3,10 +3,10 @@ import React, { useCallback, useState } from "react";
 import type { NextPage } from "next";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
-import { questionType } from "../../../businessRules/TestQuestion";
+import { questionType, TestQuestionOption } from "../../../businessRules/TestQuestion";
 
 /* --- asset --------------------------------------------------------------------------------------------------------- */
 import styles from "./testTakingPage.module.scss";
@@ -31,18 +31,14 @@ import { TestInputValues, TestStep, testStep } from "./pageSettings"
 import {
   numberInputtingErrorMessages,
   testTakeValidations,
-  singleOptionErrorMessage, singleOrMultipleOptionsErrorMessage
+  singleOptionErrorMessage,
+  singleOrMultipleOptionsErrorMessage
 } from "../../../validations/testTakeValidations";
 
 
 const TestTakingPage: NextPage = () => {
 
   const router = useRouter();
-  const [activeStep, setActiveStep] = useState<TestStep>(testStep.guidance);
-
-  const goToQuestionStep = useCallback(() => {
-    setActiveStep(testStep.questions);
-  },[])
 
   /* --- テストデータ取得 ---------------------------------------------------------------------------------------------- */
   const testId = router.query.id ? String(router.query.id) : null;
@@ -60,9 +56,32 @@ const TestTakingPage: NextPage = () => {
   }
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
-  const { register, handleSubmit, formState: { errors } } = useForm<TestInputValues>();
-  const testSubmit: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
-    console.log(inputValue.answers);
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm<TestInputValues>();
+  const [activeStep, setActiveStep] = useState<TestStep>(testStep.guidance);
+
+  const goToQuestionStep = useCallback(() => {
+    setActiveStep(testStep.questions);
+  },[])
+
+  const goToSelfCheckStep = () => {
+    setActiveStep(testStep.selfCheck);
+  }
+
+  const returnToQuestionStep = useCallback(() => {
+    setActiveStep(testStep.questions)
+  }, []);
+
+  const submitTestData = () => {
+    console.log(getValues())
+  }
+
+  const getAnswerOptionText = (answerOptionId: number, options?: TestQuestionOption[]) => {
+
+    if (!options) return undefined;
+
+    return options.find((option) => {
+      return option.id === Number(answerOptionId)
+    })?.text
   }
 
   return (
@@ -95,7 +114,7 @@ const TestTakingPage: NextPage = () => {
           {activeStep === testStep.questions &&
             <div className={styles.questionsStep}>
               <CountDownTimer timeLimit={test.timeLimit}/>
-              <form className={styles.questionsForm} onSubmit={handleSubmit(testSubmit)}>
+              <form className={styles.questionsForm} onSubmit={handleSubmit(goToSelfCheckStep)} id="questionForm">
                 {test.questions.map((question, index) => (
                   <div className={styles.questionBox} key={question.id}>
 
@@ -171,8 +190,37 @@ const TestTakingPage: NextPage = () => {
                     </div>
                   </div>
                 ))}
-                <button type="submit">送信</button>
+                <Button color="YELLOW" size="BIG" type="submit">回答を確認</Button>
               </form>
+            </div>
+          }
+          {activeStep == testStep.selfCheck &&
+            <div className={styles.selfCheckStep}>
+              <h2 className={styles.checkHeading}>確認</h2>
+              <div className={styles.checkQuestionsFlow}>
+                {test.questions.map((question, index) => (
+                  <React.Fragment key={question.id}>
+                    <div>Q{index + 1}</div>
+                    <p>{question.text}</p>
+
+                    {question.type === questionType.numberInputting && <p>{getValues().answers[index].numberAnswer}</p>}
+
+                    {question.type === questionType.singleOption && question.options && getValues().answers[index].optionAnswerId &&
+                      <p>{getAnswerOptionText(Number(getValues().answers[index].optionAnswerId), question.options)}</p>
+                    }
+
+                    { question.type === questionType.singleOrMultipleOptions &&
+                      question.options &&
+                      getValues().answers[index].optionAnswerIds &&
+                      getValues().answers[index].optionAnswerIds?.map((optionId) => (
+                        <p key={optionId}>{getAnswerOptionText(optionId, question.options)}</p>
+                      ))
+                    }
+                  </React.Fragment>
+                ))}
+                <Button color="WHITE" size="BIG" onClick={returnToQuestionStep}>戻る</Button>
+                <Button color="YELLOW" size="BIG" onClick={submitTestData}>回答を送信</Button>
+              </div>
             </div>
           }
         </>
@@ -182,7 +230,6 @@ const TestTakingPage: NextPage = () => {
 }
 
 export default TestTakingPage;
-
 
 
 
