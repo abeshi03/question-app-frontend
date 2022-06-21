@@ -35,6 +35,9 @@ import {
   singleOrMultipleOptionsErrorMessage
 } from "../../../validations/testTakeValidations";
 
+/* --- utility ------------------------------------------------------------------------------------------------------- */
+import { scrollToTop } from "../../../utility/scrollToTop";
+
 
 const TestTakingPage: NextPage = () => {
 
@@ -62,11 +65,13 @@ const TestTakingPage: NextPage = () => {
 
   const goToQuestionStep = useCallback(() => {
     setActiveStep(testStep.questions);
+    scrollToTop();
   },[])
 
   /*　-- 問題画面  ---------------------------------------------------------------------------------------------------- */
   const goToSelfCheckStep = () => {
     setActiveStep(testStep.selfCheck);
+    scrollToTop();
   }
 
   /*　-- 確認画面  ---------------------------------------------------------------------------------------------------- */
@@ -80,6 +85,7 @@ const TestTakingPage: NextPage = () => {
 
   const returnToQuestionStep = useCallback(() => {
     setActiveStep(testStep.questions)
+    scrollToTop();
   }, []);
 
   const submitTestData = () => {
@@ -196,32 +202,39 @@ const TestTakingPage: NextPage = () => {
               </form>
             </div>
           }
+          {/* 確認画面 --------------------------------------------------------------------------- */}
           {activeStep == testStep.selfCheck &&
             <div className={styles.selfCheckStep}>
               <h2 className={styles.checkHeading}>確認</h2>
               <div className={styles.checkQuestionsFlow}>
                 {test.questions.map((question, index) => (
-                  <React.Fragment key={question.id}>
-                    <div>Q{index + 1}</div>
-                    <p>{question.text}</p>
+                  <div className={styles.answerCard} key={question.id}>
+                    <span className={styles.questionNumber}>Q{index + 1}</span>
+                    <span className={styles.questionText}>{question.text}</span>
 
-                    {question.type === questionType.numberInputting && <p>{getValues().answers[index].numberAnswer}</p>}
+                    {question.type === questionType.numberInputting &&
+                      <p className={styles.answer}>{getValues().answers[index].numberAnswer}</p>
+                    }
 
                     {question.type === questionType.singleOption && question.options && getValues().answers[index].optionAnswerId &&
-                      <p>{getAnswerOptionText(Number(getValues().answers[index].optionAnswerId), question.options)}</p>
+                      <p
+                        className={styles.answer}
+                      >{getAnswerOptionText(Number(getValues().answers[index].optionAnswerId), question.options)}</p>
                     }
 
                     { question.type === questionType.singleOrMultipleOptions &&
                       question.options &&
                       getValues().answers[index].optionAnswerIds &&
                       getValues().answers[index].optionAnswerIds?.map((optionId) => (
-                        <p key={optionId}>{getAnswerOptionText(optionId, question.options)}</p>
+                        <p className={styles.answer} key={optionId}>{getAnswerOptionText(optionId, question.options)}</p>
                       ))
                     }
-                  </React.Fragment>
+                  </div>
                 ))}
-                <Button color="WHITE" size="BIG" onClick={returnToQuestionStep}>戻る</Button>
-                <Button color="YELLOW" size="BIG" onClick={submitTestData}>回答を送信</Button>
+                <div className={styles.buttonGroup}>
+                  <Button color="WHITE" size="BIG" onClick={returnToQuestionStep}>戻る</Button>
+                  <Button color="YELLOW" size="BIG" onClick={submitTestData}>回答を送信</Button>
+                </div>
               </div>
             </div>
           }
