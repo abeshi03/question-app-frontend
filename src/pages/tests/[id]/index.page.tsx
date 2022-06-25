@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
-import { questionType, TestQuestionOption } from "../../../businessRules/TestQuestion";
+import {QuestionType, questionType, TestQuestionOption} from "../../../businessRules/TestQuestion";
 
 /* --- asset --------------------------------------------------------------------------------------------------------- */
 import styles from "./testTakingPage.module.scss";
@@ -25,7 +25,7 @@ import { RadioButton } from "../../../components/molecules/controlls/RadioButton
 import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
-import { TestInputValues, TestStep, testStep } from "./pageSettings"
+import {Answer, TestInputValues, TestStep, testStep} from "./pageSettings"
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
@@ -37,6 +37,8 @@ import {
 
 /* --- utility ------------------------------------------------------------------------------------------------------- */
 import { scrollToTop } from "../../../utility/scrollToTop";
+import {clonableBodyForRequest} from "next/dist/server/body-streams";
+import {isNotUndefined} from "../../../utility/typeGuard/isNotUndefined";
 
 
 const TestTakingPage: NextPage = () => {
@@ -88,8 +90,35 @@ const TestTakingPage: NextPage = () => {
     scrollToTop();
   }, []);
 
-  const submitTestData = () => {
-    console.log(getValues())
+  const [isPassed, setIsPassed] = useState(false);
+
+  const getQuestionType = (
+    numberAnswer?: number,
+    optionAnswerId?: number,
+    optionAnswerIds?: number[]
+  ): QuestionType => {
+    if (isNotUndefined(numberAnswer)) return "NUMBER_INPUTTING";
+    if (isNotUndefined(optionAnswerId)) return "SINGLE_OPTION";
+    if (isNotUndefined(optionAnswerIds)) return "SINGLE_OR_MULTIPLE_OPTIONS";
+    throw new error;
+  }
+
+  const submitTestData = async (): Promise<void> => {
+
+    if (!testId) {
+      console.log("nothing testId or test")
+      return;
+    }
+
+    const isPassed: boolean = (await testApi.submitAnswer({
+      testId,
+      answers: getValues().answers.map((answer, index) => ({
+        questionId: test!.questions[index].id,
+        payload: answer.numberAnswer ?? answer.optionAnswerId ?? answer.optionAnswerIds,
+        type: getQuestionType(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds)
+      }))
+    })).isPassed;
+    setIsPassed(isPassed);
   }
 
   return (
