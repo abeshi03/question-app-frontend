@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
-import {QuestionType, questionType, TestQuestionOption} from "../../../businessRules/TestQuestion";
+import { QuestionType, questionType, TestQuestionOption } from "../../../businessRules/TestQuestion";
 
 /* --- asset --------------------------------------------------------------------------------------------------------- */
 import styles from "./testTakingPage.module.scss";
@@ -25,7 +25,7 @@ import { RadioButton } from "../../../components/molecules/controlls/RadioButton
 import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
-import {Answer, TestInputValues, TestStep, testStep} from "./pageSettings"
+import { Answer, TestInputValues, TestStep, testStep } from "./pageSettings"
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
@@ -37,8 +37,8 @@ import {
 
 /* --- utility ------------------------------------------------------------------------------------------------------- */
 import { scrollToTop } from "../../../utility/scrollToTop";
-import {clonableBodyForRequest} from "next/dist/server/body-streams";
-import {isNotUndefined} from "../../../utility/typeGuard/isNotUndefined";
+import { clonableBodyForRequest } from "next/dist/server/body-streams";
+import { isNotUndefined } from "../../../utility/typeGuard/isNotUndefined";
 
 
 const TestTakingPage: NextPage = () => {
@@ -119,6 +119,7 @@ const TestTakingPage: NextPage = () => {
       }))
     })).isPassed;
     setIsPassed(isPassed);
+    setActiveStep(testStep.result);
   }
 
   return (
@@ -267,6 +268,14 @@ const TestTakingPage: NextPage = () => {
               </div>
             </div>
           }
+
+          {/* 結果画面 --------------------------------------------------------------------------- */}
+          {activeStep == testStep.result &&
+            <div className={styles.resultStep}>
+              <h2>テスト結果</h2>
+              <p>{ isPassed ? "合格" : "不合格" }</p>
+            </div>
+          }
         </>
       }
     </div>
@@ -274,6 +283,7 @@ const TestTakingPage: NextPage = () => {
 }
 
 export default TestTakingPage;
+
 
 
 
