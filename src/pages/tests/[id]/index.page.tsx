@@ -115,7 +115,7 @@ const TestTakingPage: NextPage = () => {
 
   const submitTestData = async (): Promise<void> => {
 
-    if (!testId) {
+    if (!testId || !test) {
       console.log("nothing testId or test")
       return;
     }
@@ -124,7 +124,7 @@ const TestTakingPage: NextPage = () => {
       const isPassed: boolean = (await testApi.submitAnswer({
         testId,
         answers: getValues().answers.map((answer, index) => ({
-          questionId: test!.questions[index].id,
+          questionId: test.questions[index].id,
           payload: getQuestionAnswer(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds),
           type: getQuestionType(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds)
         }))
