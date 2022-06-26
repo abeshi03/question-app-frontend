@@ -25,7 +25,7 @@ import { RadioButton } from "../../../components/molecules/controlls/RadioButton
 import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
-import { Answer, TestInputValues, TestStep, testStep } from "./pageSettings"
+import { TestInputValues, TestStep, testStep } from "./pageSettings"
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
@@ -37,7 +37,6 @@ import {
 
 /* --- utility ------------------------------------------------------------------------------------------------------- */
 import { scrollToTop } from "../../../utility/scrollToTop";
-import { clonableBodyForRequest } from "next/dist/server/body-streams";
 import { isNotUndefined } from "../../../utility/typeGuard/isNotUndefined";
 
 
@@ -77,7 +76,7 @@ const TestTakingPage: NextPage = () => {
   }
 
   /*　-- 確認画面  ---------------------------------------------------------------------------------------------------- */
-  const getAnswerOptionText = (answerOptionId: number, options?: TestQuestionOption[]) => {
+  const getAnswerOptionText = (answerOptionId: string, options?: TestQuestionOption[]) => {
     if (!options) return undefined;
 
     return options.find((option) => {
@@ -94,12 +93,23 @@ const TestTakingPage: NextPage = () => {
 
   const getQuestionType = (
     numberAnswer?: number,
-    optionAnswerId?: number,
-    optionAnswerIds?: number[]
+    optionAnswerId?: string,
+    optionAnswerIds?: string[]
   ): QuestionType => {
     if (isNotUndefined(numberAnswer)) return "NUMBER_INPUTTING";
     if (isNotUndefined(optionAnswerId)) return "SINGLE_OPTION";
     if (isNotUndefined(optionAnswerIds)) return "SINGLE_OR_MULTIPLE_OPTIONS";
+    throw new error;
+  }
+
+  const getQuestionAnswer = (
+    numberAnswer?: number,
+    optionAnswerId?: string,
+    optionAnswerIds?: string[]
+  ) => {
+    if (isNotUndefined(numberAnswer)) return String(numberAnswer);
+    if (isNotUndefined(optionAnswerId)) return optionAnswerId;
+    if (isNotUndefined(optionAnswerIds)) return optionAnswerIds;
     throw new error;
   }
 
@@ -110,16 +120,22 @@ const TestTakingPage: NextPage = () => {
       return;
     }
 
-    const isPassed: boolean = (await testApi.submitAnswer({
-      testId,
-      answers: getValues().answers.map((answer, index) => ({
-        questionId: test!.questions[index].id,
-        payload: answer.numberAnswer ?? answer.optionAnswerId ?? answer.optionAnswerIds,
-        type: getQuestionType(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds)
-      }))
-    })).isPassed;
-    setIsPassed(isPassed);
-    setActiveStep(testStep.result);
+    try {
+      const isPassed: boolean = (await testApi.submitAnswer({
+        testId,
+        answers: getValues().answers.map((answer, index) => ({
+          questionId: test!.questions[index].id,
+          payload: getQuestionAnswer(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds),
+          type: getQuestionType(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds)
+        }))
+      })).isPassed;
+      setIsPassed(isPassed);
+      setActiveStep(testStep.result);
+    } catch (error: unknown) {
+
+      console.log(error);
+      alert("エラーです")
+    }
   }
 
   return (
@@ -249,7 +265,7 @@ const TestTakingPage: NextPage = () => {
                     {question.type === questionType.singleOption && question.options && getValues().answers[index].optionAnswerId &&
                       <p
                         className={styles.answer}
-                      >{getAnswerOptionText(Number(getValues().answers[index].optionAnswerId), question.options)}</p>
+                      >{getAnswerOptionText(String(getValues().answers[index].optionAnswerId), question.options)}</p>
                     }
 
                     { question.type === questionType.singleOrMultipleOptions &&
