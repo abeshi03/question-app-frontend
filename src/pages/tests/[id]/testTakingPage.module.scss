@@ -3,7 +3,7 @@
   padding-top: 85px;
   padding-bottom: 85px;
 
-  /* スタート画面 ------------------------------------------------------------------------------------------------------ */
+  /* - スタート画面 ----------------------------------------------------------------------------------------------------- */
   .guidanceStep {
     display: flex;
     flex-direction: column;
@@ -47,7 +47,7 @@
     margin-top: 40px;
   }
 
-  /* 問題 ------------------------------------------------------------------------------------------------------------ */
+  /* - 問題 ------------------------------------------------------------------------------------------------------------ */
   .questionsStep {
 
     max-width: 700px;
@@ -100,5 +100,49 @@
 
     margin-top: 30px;
     margin-bottom: 30px;
+  }
+
+  /* - 確認 ------------------------------------------------------------------------------------------------------------ */
+  .selfCheckStep {
+    padding: 30px;
+    max-width: 800px;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+
+    background-color: white;
+  }
+
+  .checkHeading {
+    padding-bottom: 10px;
+    border-bottom: 2px solid black;
+
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .checkQuestionsFlow {
+    margin-top: 30px;
+  }
+
+  .answerCard {
+
+    padding: 30px;
+
+    &:nth-child(odd) {
+      background: #F5F8FA;
+    }
+  }
+
+  .answer {
+    margin-top: 20px;
+  }
+
+  .buttonGroup {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 20px;
   }
 }

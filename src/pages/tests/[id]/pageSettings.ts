@@ -11,8 +11,8 @@ export type TestStep = typeof testStep[keyof typeof testStep];
 export type Answer = {
   id: number;
   numberAnswer?: number;
-  optionAnswerId?: number;
-  optionAnswerIds?: number[];
+  optionAnswerId?: string;
+  optionAnswerIds?: string[];
 }
 export type TestInputValues = {
   answers: Answer[];
