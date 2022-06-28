@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import type { NextPage } from "next";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 /* --- businessRule -------------------------------------------------------------------------------------------------- */
 import { QuestionType, questionType, TestQuestionOption } from "../../../businessRules/TestQuestion";
@@ -25,7 +25,12 @@ import { RadioButton } from "../../../components/molecules/controlls/RadioButton
 import { Checkbox } from "../../../components/molecules/controlls/CheckBox/CheckBox";
 
 /* --- pageSettings -------------------------------------------------------------------------------------------------- */
-import { TestInputValues, TestStep, testStep } from "./pageSettings"
+import {
+  Answer,
+  TestInputValues,
+  TestStep,
+  testStep
+} from "./pageSettings"
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
@@ -55,7 +60,7 @@ const TestTakingPage: NextPage = () => {
   }
 
   /* --- フォーム ----------------------------------------------------------------------------------------------------- */
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm<TestInputValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<TestInputValues>();
   const [ activeStep, setActiveStep ] = useState<TestStep>(testStep.guidance);
 
 
@@ -70,9 +75,18 @@ const TestTakingPage: NextPage = () => {
   },[])
 
   /*　-- 問題画面  ---------------------------------------------------------------------------------------------------- */
-  const goToSelfCheckStep = () => {
-    setActiveStep(testStep.selfCheck);
-    scrollToTop();
+  const [ answers, setAnswers ] = useState<Answer[]>([]);
+
+  const savedAnswers: SubmitHandler<TestInputValues> = async (inputValue): Promise<void> => {
+    try {
+      setAnswers(inputValue.answers);
+      setActiveStep(testStep.selfCheck);
+      scrollToTop();
+    } catch (error: unknown) {
+
+      console.log(error);
+      alert("回答の保存に失敗しました");
+    }
   }
 
   /*　-- 確認画面  ---------------------------------------------------------------------------------------------------- */
@@ -123,7 +137,7 @@ const TestTakingPage: NextPage = () => {
     try {
       const isPassed: boolean = (await testApi.submitAnswer({
         testId,
-        answers: getValues().answers.map((answer, index) => ({
+        answers: answers.map((answer, index) => ({
           questionId: test.questions[index].id,
           payload: getQuestionAnswer(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds),
           type: getQuestionType(answer.numberAnswer, answer.optionAnswerId, answer.optionAnswerIds)
@@ -168,7 +182,7 @@ const TestTakingPage: NextPage = () => {
           {activeStep === testStep.questions &&
             <div className={styles.questionsStep}>
               <CountDownTimer timeLimit={test.timeLimit}/>
-              <form className={styles.questionsForm} onSubmit={handleSubmit(goToSelfCheckStep)} id="questionForm">
+              <form className={styles.questionsForm} onSubmit={handleSubmit(savedAnswers)} id="questionForm">
                 {test.questions.map((question, index) => (
                   <div className={styles.questionBox} key={question.id}>
 
@@ -259,19 +273,19 @@ const TestTakingPage: NextPage = () => {
                     <span className={styles.questionText}>{question.text}</span>
 
                     {question.type === questionType.numberInputting &&
-                      <p className={styles.answer}>{getValues().answers[index].numberAnswer}</p>
+                      <p className={styles.answer}>{answers[index].numberAnswer}</p>
                     }
 
-                    {question.type === questionType.singleOption && question.options && getValues().answers[index].optionAnswerId &&
+                    {question.type === questionType.singleOption && question.options && answers[index].optionAnswerId &&
                       <p
                         className={styles.answer}
-                      >{getAnswerOptionText(String(getValues().answers[index].optionAnswerId), question.options)}</p>
+                      >{getAnswerOptionText(String(answers[index].optionAnswerId), question.options)}</p>
                     }
 
                     { question.type === questionType.singleOrMultipleOptions &&
                       question.options &&
-                      getValues().answers[index].optionAnswerIds &&
-                      getValues().answers[index].optionAnswerIds?.map((optionId) => (
+                      answers[index].optionAnswerIds &&
+                      answers[index].optionAnswerIds?.map((optionId) => (
                         <p className={styles.answer} key={optionId}>{getAnswerOptionText(optionId, question.options)}</p>
                       ))
                     }
