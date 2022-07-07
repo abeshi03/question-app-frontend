@@ -13,4 +13,8 @@ export namespace Endpoint {
       return `${BASE_URL}/tests/${testId}/submit`
     }
   }
+
+  export namespace Category {
+    export const findList = `${BASE_URL}/categories`;
+  }
 }

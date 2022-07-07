@@ -59,10 +59,10 @@ export const TestDataControlGroup: FC<Props> = (props) => {
           type="number"
           defaultValue={0}
           required={false}
-          inputProps={register("timeLimit__hours", {
-            required: testDataValidations.timeLimit__hours.required,
-            min: testDataValidations.timeLimit__hours.min,
-            max: testDataValidations.timeLimit__hours.max
+          inputProps={register("timeLimit__seconds", {
+            required: testDataValidations.timeLimit__seconds.required,
+            min: testDataValidations.timeLimit__seconds.min,
+            max: testDataValidations.timeLimit__seconds.max
           })}
         />
         <span　className={styles.timeLimit__unit}>秒</span>
