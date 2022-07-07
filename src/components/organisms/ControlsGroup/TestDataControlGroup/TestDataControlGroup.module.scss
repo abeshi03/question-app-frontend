@@ -2,5 +2,18 @@
 
   display: flex;
   flex-direction: column;
-  row-gap: 30px;
+
+  .submitButton {
+    margin-top: 60px;
+  }
+
+  .timeLimit {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+
+    &__unit {
+      margin-top: 10px;
+    }
+  }
 }

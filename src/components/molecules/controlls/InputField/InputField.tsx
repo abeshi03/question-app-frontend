@@ -17,7 +17,7 @@ type Props = {
   required: boolean;
   guidance?: string;
   disabled?: boolean;
-  defaultValue?: string;
+  defaultValue?: string | number;
   autoComplete?: string;
   className?: string;
   inputProps: React.HTMLAttributes<HTMLInputElement>;
