@@ -1,0 +1,20 @@
+.categoriesFlow {
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  margin-top: 15px;
+
+  .checkboxAndLabel {
+    border: 1px solid #d2d0d0;
+    border-radius: 5px;
+    padding: 10px;
+
+    cursor: pointer;
+
+    &:hover {
+      border-color: black;
+    }
+  }
+}

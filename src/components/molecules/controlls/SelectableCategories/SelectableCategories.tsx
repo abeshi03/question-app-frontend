@@ -18,6 +18,7 @@ import { Endpoint } from "../../../../apis/endpoints";
 
 type Props = {
   required: boolean;
+  className?: string;
   guidance?: string
   defaultChecked?: boolean;
   inputProps: React.HTMLAttributes<HTMLInputElement>;
@@ -27,7 +28,7 @@ export const SelectableCategories: FC<Props> = memo((props) => {
 
   const {
     required,
-    guidance,
+    className,
     defaultChecked = false,
     inputProps,
   } = props;
@@ -40,7 +41,7 @@ export const SelectableCategories: FC<Props> = memo((props) => {
 
 
   return (
-    <div className={styles.selectableCategories}>
+    <div className={`${className} ${styles.selectableCategories}`}>
       <InputLabel label="カテゴリー" required={required} />
       {isLoading && <p>ローディング</p>}
       {isError && <p>エラー</p>}
@@ -48,7 +49,7 @@ export const SelectableCategories: FC<Props> = memo((props) => {
       {categories &&
         <div className={styles.categoriesFlow}>
           {categories.map((category) => (
-            <React.Fragment key={category.id}>
+            <label htmlFor={String(category.id)} className={styles.checkboxAndLabel} key={category.id}>
               <input
                 type="checkbox"
                 id={String(category.id)}
@@ -56,8 +57,8 @@ export const SelectableCategories: FC<Props> = memo((props) => {
                 defaultChecked={defaultChecked}
                 { ...inputProps }
               />
-              <label htmlFor={String(category.id)}>{ category.name }</label>
-            </React.Fragment>
+              <span>{ category.name }</span>
+            </label>
           ))}
         </div>
       }
