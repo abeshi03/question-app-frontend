@@ -80,7 +80,7 @@ export const TestDataControlGroup: FC<Props> = (props) => {
 
       <>
         <SelectableCategories
-          required={true}
+          required={testDataValidations.categoriesIds.required}
           errors={errors.categoriesIds}
           inputProps={register("categoriesIds", {
             required: testDataValidations.categoriesIds.required,
