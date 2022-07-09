@@ -9,9 +9,8 @@ import { TestDataInputValues } from "./pageSettings";
 /* --- assets -------------------------------------------------------------------------------------------------------- */
 import styles from "./TestAddingPage.module.scss";
 
-/* --- 子コンポーネント ------------------------------------------------------------------------------------------------- */
+/* --- components ---------------------------------------------------------------------------------------------------- */
 import { TestDataControlGroup } from "../../../components/organisms/ControlsGroup/TestDataControlGroup/TestDataControlGroup";
-
 
 const TestAddingPage: NextPage = () => {
 

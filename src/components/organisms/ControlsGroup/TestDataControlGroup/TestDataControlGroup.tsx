@@ -1,13 +1,17 @@
 /* --- libs ---------------------------------------------------------------------------------------------------------- */
-import { FC } from "react";
+import React, { FC } from "react";
 
 /* --- assets -------------------------------------------------------------------------------------------------------- */
 import styles from "./TestDataControlGroup.module.scss";
 import { UnpackNestedValue, useForm } from "react-hook-form";
 
-/* --- components ---------------------------------------------------------------------------------------------------- */
-import { InputField } from "../../../molecules/controlls/InputField/InputField";
+/* --- pageSettings --------------------------------------------------------------------------------------------------- */
 import { TestDataInputValues } from "../../../../pages/tests/add/pageSettings";
+
+/* --- components ---------------------------------------------------------------------------------------------------- */
+import { InputLabel } from "../../../atoms/InputLabel/InputLabel";
+import { InputField } from "../../../molecules/controlls/InputField/InputField";
+import { SelectableCategories } from "../../../molecules/controlls/SelectableCategories/SelectableCategories";
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
@@ -15,6 +19,7 @@ import {
   testNameErrorMessages,
   timeLimitHoursErrorMessages, timeLimitSecondsErrorMessages
 } from "../../../../validations/testDataValidations";
+
 
 type Props = {
   className?: string;
@@ -42,6 +47,7 @@ export const TestDataControlGroup: FC<Props> = (props) => {
       />
       { errors.name && testNameErrorMessages(errors.name) }
 
+      <InputLabel label="制限時間" required={true}/>
       <div className={styles.timeLimit}>
         <InputField
           type="number"
@@ -69,6 +75,13 @@ export const TestDataControlGroup: FC<Props> = (props) => {
       </div>
       { errors.timeLimit__hours && timeLimitHoursErrorMessages(errors.timeLimit__hours) }
       { errors.timeLimit__seconds && timeLimitSecondsErrorMessages(errors.timeLimit__seconds) }
+
+      <SelectableCategories
+        required={true}
+        inputProps={register("categoriesIds", {
+          required: true
+        })}
+      />
 
       <button className={styles.submitButton} type="submit">送信</button>
     </form>
