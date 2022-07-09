@@ -15,9 +15,11 @@ import { SelectableCategories } from "../../../molecules/controlls/SelectableCat
 
 /* --- validations --------------------------------------------------------------------------------------------------- */
 import {
+  categoriesIdsErrorMessages,
   testDataValidations,
   testNameErrorMessages,
-  timeLimitHoursErrorMessages, timeLimitSecondsErrorMessages
+  timeLimitHoursErrorMessages,
+  timeLimitSecondsErrorMessages
 } from "../../../../validations/testDataValidations";
 
 
@@ -29,7 +31,7 @@ type Props = {
 
 export const TestDataControlGroup: FC<Props> = (props) => {
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<TestDataInputValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<TestDataInputValues>();
   const { className, submitFunction } = props;
 
   return (
@@ -76,12 +78,17 @@ export const TestDataControlGroup: FC<Props> = (props) => {
       { errors.timeLimit__hours && timeLimitHoursErrorMessages(errors.timeLimit__hours) }
       { errors.timeLimit__seconds && timeLimitSecondsErrorMessages(errors.timeLimit__seconds) }
 
-      <SelectableCategories
-        required={true}
-        inputProps={register("categoriesIds", {
-          required: true
-        })}
-      />
+      <>
+        <SelectableCategories
+          required={true}
+          errors={errors.categoriesIds}
+          inputProps={register("categoriesIds", {
+            required: testDataValidations.categoriesIds.required,
+            validate: testDataValidations.categoriesIds.checkMaxArrayLength
+          })}
+        />
+        { errors.categoriesIds &&  categoriesIdsErrorMessages(errors.categoriesIds) }
+      </>
 
       <button className={styles.submitButton} type="submit">送信</button>
     </form>

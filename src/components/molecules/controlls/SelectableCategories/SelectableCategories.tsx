@@ -1,6 +1,7 @@
 /* --- libs ------------------------------------------------------------------------------------------------------ */
 import React, { memo, FC } from "react";
 import useSWR from "swr";
+import { FieldError } from "react-hook-form";
 
 /* --- businessRules ------------------------------------------------------------------------------------------------- */
 import { Category } from "../../../../businessRules/Category";
@@ -21,6 +22,7 @@ type Props = {
   className?: string;
   guidance?: string
   defaultChecked?: boolean;
+  errors?: FieldError[];
   inputProps: React.HTMLAttributes<HTMLInputElement>;
 }
 
@@ -30,6 +32,7 @@ export const SelectableCategories: FC<Props> = memo((props) => {
     required,
     className,
     defaultChecked = false,
+    errors,
     inputProps,
   } = props;
 
@@ -47,7 +50,10 @@ export const SelectableCategories: FC<Props> = memo((props) => {
       {isError && <p>エラー</p>}
       {isNoCategories && <p>カテゴリーなし</p>}
       {categories &&
-        <div className={styles.categoriesFlow}>
+        <div
+          className={styles.categoriesFlow}
+          style={errors && {border: "1px solid red"}}
+        >
           {categories.map((category) => (
             <label htmlFor={String(category.id)} className={styles.checkboxAndLabel} key={category.id}>
               <input

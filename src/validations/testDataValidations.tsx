@@ -24,6 +24,14 @@ export const testDataValidations = {
     required: true,
     min: 0,
     max: 60
+  },
+
+  categoriesIds: {
+    required: true,
+    maxArrayLength: 5,
+    checkMaxArrayLength: (categoriesIds: number[]) => {
+      return categoriesIds.length <= testDataValidations.categoriesIds.maxArrayLength;
+    }
   }
 };
 
@@ -45,9 +53,7 @@ export const testNameErrorMessages = (error?: FieldError) => {
 };
 
 
-export const timeLimitHoursErrorMessages = (error?: FieldError) => {
-  if (!error) return;
-
+export const timeLimitHoursErrorMessages = (error: FieldError) => {
   switch (error.type) {
     case "required":
       return <ErrorMessage message="制限時間は必須です" />
@@ -72,5 +78,19 @@ export const timeLimitSecondsErrorMessages = (error?: FieldError) => {
 
     case "max":
       return <ErrorMessage message={`秒は${testDataValidations.timeLimit__seconds.min}〜${testDataValidations.timeLimit__seconds.max}で入力してください`} />
+  }
+};
+
+export const categoriesIdsErrorMessages = (errors?: FieldError[] | FieldError) => {
+  if (!errors) return;
+
+  if (Array.isArray(errors)) return;
+
+  switch (errors.type) {
+    case "required":
+      return <ErrorMessage message="カテゴリーは必須です" />
+
+    case "validate":
+      return <ErrorMessage message={`カテゴリーは${testDataValidations.categoriesIds.maxArrayLength}つ以下で選択してください`}  />
   }
 };

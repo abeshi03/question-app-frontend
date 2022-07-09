@@ -16,6 +16,7 @@ const TestAddingPage: NextPage = () => {
 
   const submit: SubmitHandler<TestDataInputValues> = useCallback( async (inputValues) => {
     console.log(inputValues)
+    // console.log(Number(inputValues.timeLimit__hours) * 60 + Number(inputValues.timeLimit__seconds))
   }, [])
 
   return (
