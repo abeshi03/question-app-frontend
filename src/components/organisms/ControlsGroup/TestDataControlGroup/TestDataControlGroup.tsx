@@ -87,7 +87,7 @@ export const TestDataControlGroup: FC<Props> = (props) => {
             validate: testDataValidations.categoriesIds.checkMaxArrayLength
           })}
         />
-        { errors.categoriesIds &&  categoriesIdsErrorMessages(errors.categoriesIds) }
+        { errors.categoriesIds && categoriesIdsErrorMessages(errors.categoriesIds) }
       </>
 
       <button className={styles.submitButton} type="submit">送信</button>
